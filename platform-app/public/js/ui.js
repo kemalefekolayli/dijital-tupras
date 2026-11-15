@@ -1,0 +1,11 @@
+export const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+export const lines=s=>esc(s).replaceAll('\n','<br>');
+export const $=s=>document.querySelector(s);
+export const types={video:'Video',micro:'Mikro bilgi',choice:'Çoktan seçmeli',open:'Açık uçlu',boolean:'Doğru / yanlış',match:'Eşleştirme',compare:'Karşılaştırma',scenario:'Vaka oyunu',survey:'Memnuniyet anketi',assessment:'Modül ön testi',sheet:'Excel uygulaması'};
+export const statuses={active:'Devam ediyor',awaiting_review:'Eğitmen incelemesinde',completed:'Tamamlandı',not_started:'Henüz başlamadı',passed:'Tamamlandı',pending:'İncelemede',revision:'Düzeltme bekliyor',incorrect:'Tekrar dene',started:'Başlandı',skipped:'Ön testle atlandı'};
+export const date=s=>s?new Date(s).toLocaleDateString('tr-TR'):'';
+export function toast(msg){$('#announcements').innerHTML=`<div class="toast">${esc(msg)}</div>`;setTimeout(()=>{$('#announcements').innerHTML=''},4000);}
+export function heading(k,t,p,action=''){return `<header class="page"><div><div class="eyebrow">${esc(k)}</div><h1>${esc(t)}</h1><p>${esc(p)}</p></div>${action}</header>`;}
+export function field(label,name,value='',type='text',attrs=''){return `<label class="form-field">${esc(label)}<input name="${name}" type="${type}" value="${esc(value)}" ${attrs}></label>`;}
+export async function busy(button,fn){if(button?.disabled)return;const old=button?.textContent;if(button){button.disabled=true;button.textContent='Kaydediliyor…'}try{return await fn()}catch(e){toast(e.message);throw e}finally{if(button?.isConnected){button.disabled=false;button.textContent=old}}}
+export function courseCard(c,i=0){return `<article class="course"><div class="art ${['teal','purple','orange','blue'][i%4]}"><div class="eyebrow">${esc(c.category)}</div><span>${['↗','▥','◌','⚑'][i%4]}</span></div><div class="course-body"><h3>${esc(c.title)}</h3><p>${esc(c.description)}</p><div class="meta"><span>◷ ${esc(c.duration)} · ${c.modules} modül</span><span>${c.assigned?'Sana atandı':'Keşfet'}</span></div><div class="progress"><i style="width:${c.progress}%"></i></div><div class="meta"><span>${statuses[c.status]}</span><span>%${c.progress}</span></div><a class="button" href="#learn/${c.id}">${c.status==='not_started'?'Eğitime başla':'Eğitime devam et'} →</a></div></article>`;}

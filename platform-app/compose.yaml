@@ -1,0 +1,13 @@
+services:
+  app:
+    build: .
+    ports:
+      - "127.0.0.1:3000:3000"
+    environment:
+      NODE_ENV: production
+      PUBLIC_ORIGIN: ${PUBLIC_ORIGIN:?Set PUBLIC_ORIGIN to your HTTPS address}
+    volumes:
+      - pusula-data:/app/data
+    restart: unless-stopped
+volumes:
+  pusula-data:
